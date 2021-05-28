@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { Popper, usePopper } from 'react-popper';
 import './injectHighlightTooltip.css'
 
@@ -30,8 +30,17 @@ const InjectHighlightTooltip = (props) => {
 
   const onMouseUp = (e) => {
     // const path = e.path || (e.composedPath && e.composedPath)
-
+    console.log('onmouseup')
     handleClose()
+  }
+
+  const handleClose = () => {
+    const {onHide} = props
+    setTimeout(() => {
+      window.removeEventListener('mouseup', onMouseUp)
+      window.removeEventListener('scroll', onScroll)
+      onHide()
+    } , 200)
   }
 
   const onScroll = () => {
@@ -41,14 +50,16 @@ const InjectHighlightTooltip = (props) => {
     setVirtualReferenceElement(new VirtualReferenceElement(boundingClientRect))
   }
 
-  window.addEventListener('mouseup', onMouseUp)
-  window.addEventListener('scroll', onScroll);
-
-  const handleClose = () => {
-    const {onHide} = props
-
-    setTimeout(() => onHide(), 200)
-  }
+  useEffect(() => {
+    console.log('add mouseup listener')
+    window.addEventListener('mouseup', onMouseUp)
+    window.addEventListener('scroll', onScroll);
+    return () => {
+      console.log('remove mouseup  listener')
+      window.removeEventListener('mouseup', onMouseUp)
+      window.removeEventListener('scroll', onScroll)
+    }
+  }, [onScroll, onMouseUp])
 
   return (
     <Popper referenceElement={virtualReferenceElement}>

@@ -1,4 +1,4 @@
-import { printLine } from './modules/print';
+// import { printLine } from './modules/print';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import InjectHighlightTooltip from '../../components/InjectHighlightTooltip';
